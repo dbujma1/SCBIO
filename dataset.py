@@ -5,6 +5,9 @@ from PIL import Image
 base_dir = 'dataset'
 vocales = ['A', 'E', 'I', 'O', 'U']
 
+# Tamaño deseado
+img_size = (64, 64)
+
 for vocal in vocales:
     folder_path = os.path.join(base_dir, vocal)
     
@@ -16,15 +19,18 @@ for vocal in vocales:
             # Nombre base y extensión
             name, ext = os.path.splitext(filename)
 
+            # Redimensionar imagen original (y sobrescribirla)
+            img_resized = img.resize(img_size)
+            img_resized.save(img_path)
+
             # Flip horizontal
-            img_flip = img.transpose(Image.FLIP_LEFT_RIGHT)
+            img_flip = img_resized.transpose(Image.FLIP_LEFT_RIGHT)
             img_flip.save(os.path.join(folder_path, f"{name}_flip{ext}"))
 
-            # Rotar 20° a la izquierda (positivo)
-            img_rot_left = img.rotate(20, expand=True)
+            # Rotar 20° a la izquierda y redimensionar
+            img_rot_left = img_resized.rotate(20, expand=True).resize(img_size)
             img_rot_left.save(os.path.join(folder_path, f"{name}_rot20{ext}"))
 
-            # Rotar 20° a la derecha (negativo)
-            img_rot_right = img.rotate(-20, expand=True)
+            # Rotar 20° a la derecha y redimensionar
+            img_rot_right = img_resized.rotate(-20, expand=True).resize(img_size)
             img_rot_right.save(os.path.join(folder_path, f"{name}_rot_20{ext}"))
-
