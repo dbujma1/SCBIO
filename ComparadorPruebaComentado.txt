@@ -1,0 +1,95 @@
+# Importar las librerías necesarias
+import cv2  # Para trabajar con la cámara y procesar imágenes
+import numpy as np  # Para manejar arreglos y datos numéricos
+import mediapipe as mp  # Para detección de manos con MediaPipe
+from tensorflow.keras.models import load_model  # Para cargar el modelo de red neuronal entrenado
+
+# Cargar el modelo entrenado (modelo de lenguaje de señas)
+model = load_model('modelo_entrenado.h5')  # Asegúrate de que la ruta al archivo sea correcta
+clases = ['A', 'E', 'I', 'O', 'U']  # Lista de clases (letras) que el modelo puede predecir
+
+# Inicializar MediaPipe para la detección de manos
+mp_hands = mp.solutions.hands  # Acceder a la solución de manos de MediaPipe
+hands = mp_hands.Hands(static_image_mode=False,  # No usar imágenes estáticas, procesar video en tiempo real
+                       max_num_hands=1,  # Solo detectar hasta 1 mano
+                       min_detection_confidence=0.7)  # Confianza mínima para detectar la mano
+mp_draw = mp.solutions.drawing_utils  # Herramienta de MediaPipe para dibujar sobre la imagen
+
+# Captura de video desde la webcam (0 es la cámara predeterminada)
+cap = cv2.VideoCapture(0)
+
+# Bucle principal que captura cada fotograma del video
+while True:
+    ret, frame = cap.read()  # Leer un fotograma desde la cámara
+    if not ret:
+        break  # Si no se pudo leer el fotograma, salir del bucle
+
+    # Voltear el fotograma horizontalmente (efecto espejo)
+    frame = cv2.flip(frame, 1)
+    
+    # Obtener las dimensiones del fotograma (alto, ancho y canales de color)
+    h, w, c = frame.shape
+
+    # Convertir la imagen de BGR (usada por OpenCV) a RGB (usada por MediaPipe)
+    img_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    
+    # Procesar la imagen para detectar la mano
+    results = hands.process(img_rgb)
+
+    # Si se detectan manos
+    if results.multi_hand_landmarks:
+        for hand_landmarks in results.multi_hand_landmarks:  # Si hay más de una mano, procesar cada una
+            # Dibujar los puntos clave y conexiones de la mano sobre el fotograma
+            mp_draw.draw_landmarks(frame, hand_landmarks, mp_hands.HAND_CONNECTIONS)
+
+            # Obtener las coordenadas X y Y de los puntos clave de la mano
+            x_coords = [lm.x for lm in hand_landmarks.landmark]
+            y_coords = [lm.y for lm in hand_landmarks.landmark]
+            
+            # Calcular el bounding box (cuadro de ajuste) de la mano, con un margen de 20 píxeles
+            x_min = int(min(x_coords) * w) - 20
+            x_max = int(max(x_coords) * w) + 20
+            y_min = int(min(y_coords) * h) - 20
+            y_max = int(max(y_coords) * h) + 20
+
+            # Asegurar que el cuadro no salga de los límites de la imagen
+            x_min = max(0, x_min)
+            y_min = max(0, y_min)
+            x_max = min(w, x_max)
+            y_max = min(h, y_max)
+
+            # Recortar la imagen para obtener solo la mano detectada
+            mano_crop = frame[y_min:y_max, x_min:x_max]
+            
+            # Redimensionar la imagen recortada a un tamaño adecuado para el modelo (por ejemplo, 64x64)
+            mano_resize = cv2.resize(mano_crop, (64, 64))  
+            
+            # Normalizar la imagen (convertir los píxeles a un rango de 0 a 1)
+            mano_norm = mano_resize.astype('float32') / 255.0
+            
+            # Expandir dimensiones para que tenga la forma [1, 64, 64, 3] (batch size, alto, ancho, canales)
+            mano_input = np.expand_dims(mano_norm, axis=0)
+
+            # Realizar la predicción con el modelo cargado
+            pred = model.predict(mano_input)
+            
+            # Obtener la clase (letra) con la mayor probabilidad
+            idx = np.argmax(pred[0])
+            letra = clases[idx]  # La letra predicha según el índice
+
+            # Mostrar el texto de la predicción sobre el fotograma (con un color verde)
+            cv2.putText(frame, f'Prediccion: {letra}', (x_min, y_min - 10),
+                        cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+
+    # Mostrar el fotograma con la predicción sobre la ventana
+    cv2.imshow("Comparador LSA", frame)
+
+    # Si se presiona la tecla 'q', salir del bucle
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+# Limpiar y liberar la cámara después de salir del bucle
+cap.release()
+
+# Cerrar todas las ventanas abiertas por OpenCV
+cv2.destroyAllWindows()
