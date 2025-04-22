@@ -7,7 +7,7 @@ dataset_dir = 'dataset'  # Cambia esto si tu dataset está en otra ubicación
 model_path = 'model/vocal_model.h5'
 
 # Tamaño de las imágenes y batch size
-img_size = 64
+img_size = 50
 batch_size = 32
 
 # Cargar el modelo entrenado
