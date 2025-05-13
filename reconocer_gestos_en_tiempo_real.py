@@ -5,7 +5,7 @@ import numpy as np
 import tensorflow as tf
 
 # === Cargar modelo ===
-model = tf.keras.models.load_model('modelo_distancias.h5')
+model = tf.keras.models.load_model('c:/Users/aarri/OneDrive/Escritorio/Scbio trabajo nuevo/SCBIO/modelo_distancias.h5')
 labels = ['A', 'E', 'I', 'O', 'U']  # Deben coincidir con el orden del entrenamiento
 pares_de_puntos = [(0, 4), (0, 8), (0, 12), (0, 16), (0, 20)]
 
