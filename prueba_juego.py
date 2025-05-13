@@ -10,8 +10,9 @@ from pathlib import Path
 current_dir= Path(__file__).resolve().parent
 # Inicializar Pygame
 pygame.init()
-WIDTH, HEIGHT = 800, 600
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
+info = pygame.display.Info()
+WIDTH, HEIGHT = info.current_w, info.current_h
+screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
 pygame.display.set_caption("Sordolingo")
 
 # Inicializar cámara
