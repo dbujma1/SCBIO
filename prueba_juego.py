@@ -188,8 +188,7 @@ def mostrar_menu():
 
     menu = pygame_menu.Menu('SORDOLINGO', min(WIDTH, 1920), min(HEIGHT, 1080)| pygame.SCALED, theme=tema_personalizado)
 
-
-    menu.add.label("Learn sign language", font_size=40)
+    menu.add.label("Learn sign language", font_name=pygame.font.match_font('arial', italic=True), font_size=150, font_color=(0, 0, 0))
     menu.add.button('Play against the clock', juego_contra_reloj)
     menu.add.button('Learn the vowels', juego_de_aprendizaje)
     menu.add.button('Exit', pygame_menu.events.EXIT)
