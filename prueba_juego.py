@@ -12,7 +12,7 @@ current_dir= Path(__file__).resolve().parent
 pygame.init()
 info = pygame.display.Info()
 WIDTH, HEIGHT = info.current_w, info.current_h
-screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
+screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN | pygame.SCALED)
 pygame.display.set_caption("Sordolingo")
 
 # Inicializar cámara
@@ -186,7 +186,8 @@ def mostrar_menu():
     tema_personalizado.widget_font_size = 40
     tema_personalizado.title_font_size = 60
 
-    menu = pygame_menu.Menu('SORDOLINGO', WIDTH, HEIGHT, theme=tema_personalizado)
+    menu = pygame_menu.Menu('SORDOLINGO', min(WIDTH, 1920), min(HEIGHT, 1080)| pygame.SCALED, theme=tema_personalizado)
+
 
     menu.add.label("Learn sign language", font_size=40)
     menu.add.button('Play against the clock', juego_contra_reloj)
