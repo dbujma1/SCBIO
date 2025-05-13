@@ -53,7 +53,7 @@ def juego_de_aprendizaje():
         imagen_letra = pygame.transform.scale(imagen_letra, (320, 240))
 
         screen.fill(WHITE)
-        mostrar_texto(f"Aprende la letra {letra_objetivo}", font_large, BLACK, WIDTH // 2, 50)
+        mostrar_texto(f"Letter {letra_objetivo}", font_large, BLACK, WIDTH // 2, 50)
         screen.blit(imagen_letra, (50, HEIGHT // 2 - 120))
         pygame.display.flip()
 
@@ -72,12 +72,12 @@ def juego_de_aprendizaje():
             frame_surface = pygame.transform.scale(frame_surface, (320, 240))
 
             screen.fill(WHITE)
-            mostrar_texto(f"Aprende la letra {letra_objetivo}", font_large, BLACK, WIDTH // 2, 50)
+            mostrar_texto(f"Letter {letra_objetivo}", font_large, BLACK, WIDTH // 2, 50)
             screen.blit(imagen_letra, (50, HEIGHT // 2 - 120))
             screen.blit(frame_surface, (WIDTH - 340, HEIGHT // 2 - 120))
 
             if letra == letra_objetivo and time.time() - tiempo_inicial >= 3:
-                mostrar_texto("¡Correcto!", font_medium, GREEN, WIDTH // 2, HEIGHT // 2 + 100)
+                mostrar_texto("Correct!", font_medium, GREEN, WIDTH // 2, HEIGHT // 2 + 100)
                 pygame.display.flip()
                 time.sleep(1)
                 acerto = True
@@ -95,7 +95,7 @@ def juego_de_aprendizaje():
         time.sleep(2)
 
     screen.fill(WHITE)
-    mostrar_texto("¡Has aprendido todas las letras!", font_large, BLACK, WIDTH // 2, HEIGHT // 2)
+    mostrar_texto("You have learnt all the vowels", font_large, BLACK, WIDTH // 2, HEIGHT // 2)
     pygame.display.flip()
     pygame.time.wait(5000)
 
@@ -143,10 +143,10 @@ def juego_contra_reloj():
                 ultima = None
 
             screen.fill(WHITE)
-            mostrar_texto(f"Puntuación: {puntuacion}", font_medium, BLACK, WIDTH // 2, 40)
-            mostrar_texto(f"Ronda {ronda+1} de {rondas}", font_medium, BLACK, WIDTH // 2, 120)
+            mostrar_texto(f"Score: {puntuacion}", font_medium, BLACK, WIDTH // 2, 40)
+            mostrar_texto(f"Round {ronda+1} of {rondas}", font_medium, BLACK, WIDTH // 2, 120)
             tiempo_restante = int(tiempo_por_ronda - (time.time() - inicio_ronda))
-            mostrar_texto(f"Tiempo restante: {tiempo_restante}s", font_medium, BLACK, WIDTH // 2, 200)
+            mostrar_texto(f"Time: {tiempo_restante}s", font_medium, BLACK, WIDTH // 2, 200)
 
             color_letra = GREEN if letra == letra_objetivo else RED
             mostrar_texto(letra_objetivo, font_large, color_letra, WIDTH // 2, HEIGHT // 2 + 120)
@@ -164,8 +164,8 @@ def juego_contra_reloj():
             time.sleep(1)
 
     screen.fill(WHITE)
-    mostrar_texto("¡Juego terminado!", font_large, BLACK, WIDTH // 2, 200)
-    mostrar_texto(f"Puntuación final: {puntuacion} de {rondas}", font_medium, BLACK, WIDTH // 2, 300)
+    mostrar_texto("Finish!", font_large, BLACK, WIDTH // 2, 200)
+    mostrar_texto(f"Final score: {puntuacion} of {rondas}", font_medium, BLACK, WIDTH // 2, 300)
     pygame.display.flip()
     pygame.time.wait(5000)
 
@@ -187,10 +187,10 @@ def mostrar_menu():
 
     menu = pygame_menu.Menu('SORDOLINGO', WIDTH, HEIGHT, theme=tema_personalizado)
 
-    menu.add.label("Aprende lengua de señas", font_size=40)
-    menu.add.button('Juego Contra Reloj', juego_contra_reloj)
-    menu.add.button('Juego de Aprendizaje', juego_de_aprendizaje)
-    menu.add.button('Salir', pygame_menu.events.EXIT)
+    menu.add.label("Learn sign language", font_size=40)
+    menu.add.button('Play against the clock', juego_contra_reloj)
+    menu.add.button('Learn the vowels', juego_de_aprendizaje)
+    menu.add.button('Exit', pygame_menu.events.EXIT)
 
     menu.mainloop(screen)
 
