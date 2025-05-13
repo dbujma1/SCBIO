@@ -96,7 +96,7 @@ def juego_de_aprendizaje():
         time.sleep(2)
 
     screen.fill(WHITE)
-    mostrar_texto("You have learnt all the vowels", font_large, BLACK, WIDTH // 2, HEIGHT // 2)
+    mostrar_texto("You have learnt all the vowels", pygame.font.SysFont("Arial", 48), BLACK, WIDTH // 2, HEIGHT // 2)
     pygame.display.flip()
     pygame.time.wait(5000)
 
