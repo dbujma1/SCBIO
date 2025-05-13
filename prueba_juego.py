@@ -5,7 +5,9 @@ import time
 import os
 import pygame_menu
 from detectar_letra import detectar_letra
+from pathlib import Path
 
+current_dir= Path(__file__).resolve().parent
 # Inicializar Pygame
 pygame.init()
 WIDTH, HEIGHT = 800, 600
@@ -28,11 +30,11 @@ GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 
 # Música
-pygame.mixer.music.load(r'C:/Users/aarri/OneDrive/Escritorio/Scbio trabajo nuevo/SCBIO/musica.mp3')
+pygame.mixer.music.load(current_dir/'musica.mp3')
 pygame.mixer.music.play(-1, 0.0)
 
 # Imágenes
-imagenes_path = r"C:\Users\aarri\OneDrive\Escritorio\Scbio trabajo nuevo\SCBIO\Imagenes"
+imagenes_path = current_dir/"Imagenes"
 
 def mostrar_texto(texto, fuente, color, x, y, center=True):
     render = fuente.render(texto, True, color)
